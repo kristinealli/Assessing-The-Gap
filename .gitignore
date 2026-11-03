@@ -1,0 +1,7 @@
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+outputs/models/
+outputs/checkpoints/
+data/processed/*.rds

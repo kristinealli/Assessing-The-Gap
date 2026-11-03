@@ -1,0 +1,42 @@
+family,term,value,type
+logistic,(Intercept),-2.74087153210631,log-odds coefficient
+logistic,PHYSHLTH_DAYS,0.0541508565194331,log-odds coefficient
+logistic,GENHLTH_CLEAN,0.439325416770041,log-odds coefficient
+logistic,AGE_BAND35-49,-0.371920913096778,log-odds coefficient
+logistic,AGE_BAND50-64,-0.726990516751694,log-odds coefficient
+logistic,AGE_BAND65+,-1.57420181983356,log-odds coefficient
+logistic,SEX_CLEANMale,-0.417846122543366,log-odds coefficient
+logistic,EDU_CLEANHS,0.173539856585738,log-odds coefficient
+logistic,EDU_CLEANSome college,0.269790469238947,log-odds coefficient
+logistic,EDU_CLEANCollege grad,-0.106746570900465,log-odds coefficient
+logistic,INCOME_BAND25-49k,-0.210158458308737,log-odds coefficient
+logistic,INCOME_BAND50-74k,-0.283305942158811,log-odds coefficient
+logistic,INCOME_BAND75k+,-0.492035789888673,log-odds coefficient
+logistic,PERIODPost-2020,0.392329279332687,log-odds coefficient
+lasso,(Intercept),-2.73523975956943,penalized log-odds coefficient
+lasso,PHYSHLTH_DAYS,0.0539047682731718,penalized log-odds coefficient
+lasso,GENHLTH_CLEAN,0.435749459666399,penalized log-odds coefficient
+lasso,AGE_BAND35.49,-0.355162397275819,penalized log-odds coefficient
+lasso,AGE_BAND50.64,-0.706584433886013,penalized log-odds coefficient
+lasso,AGE_BAND65.,-1.54532132945097,penalized log-odds coefficient
+lasso,SEX_CLEANMale,-0.411966488281192,penalized log-odds coefficient
+lasso,EDU_CLEANHS,0.150408017919797,penalized log-odds coefficient
+lasso,EDU_CLEANSome.college,0.244974371992488,penalized log-odds coefficient
+lasso,EDU_CLEANCollege.grad,-0.124295418710111,penalized log-odds coefficient
+lasso,INCOME_BAND25.49k,-0.187988942349519,penalized log-odds coefficient
+lasso,INCOME_BAND50.74k,-0.258910416512981,penalized log-odds coefficient
+lasso,INCOME_BAND75k.,-0.470769470416466,penalized log-odds coefficient
+lasso,PERIODPost.2020,0.382166315442887,penalized log-odds coefficient
+forest,PHYSHLTH_DAYS,1796.61723647343,impurity importance (biased by variable scale)
+forest,GENHLTH_CLEAN,1136.89507301182,impurity importance (biased by variable scale)
+forest,AGE_BAND35.49,70.427756491376,impurity importance (biased by variable scale)
+forest,AGE_BAND50.64,96.400089639423,impurity importance (biased by variable scale)
+forest,AGE_BAND65.,342.660413731658,impurity importance (biased by variable scale)
+forest,SEX_CLEANMale,125.854204723235,impurity importance (biased by variable scale)
+forest,EDU_CLEANHS,57.8130258570258,impurity importance (biased by variable scale)
+forest,EDU_CLEANSome.college,69.5423063139749,impurity importance (biased by variable scale)
+forest,EDU_CLEANCollege.grad,152.567195393624,impurity importance (biased by variable scale)
+forest,INCOME_BAND25.49k,70.0175896431001,impurity importance (biased by variable scale)
+forest,INCOME_BAND50.74k,59.7489487489514,impurity importance (biased by variable scale)
+forest,INCOME_BAND75k.,183.658022314559,impurity importance (biased by variable scale)
+forest,PERIODPost.2020,110.117517346099,impurity importance (biased by variable scale)

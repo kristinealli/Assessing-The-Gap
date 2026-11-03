@@ -1,0 +1,4 @@
+family,lower_95,upper_95,replicates,interval_type
+logistic,-0.112334369323425,2.91907633975126e-05,100,conditional respondent bootstrap (not survey-design CI)
+lasso,-0.112163060855999,-0.000233386491834598,100,conditional respondent bootstrap (not survey-design CI)
+forest,-0.111608535153636,0.00546836704880061,100,conditional respondent bootstrap (not survey-design CI)

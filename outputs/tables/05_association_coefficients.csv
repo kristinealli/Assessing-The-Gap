@@ -1,0 +1,19 @@
+term,log_odds,odds_ratio,uncertainty
+(Intercept),-2.87139312223904,0.0566199930391006,Descriptive only: survey-adjusted SEs not estimated
+cohortAI/AN alone,0.034255680627055,1.03484916378872,Descriptive only: survey-adjusted SEs not estimated
+PERIODPost-2020,0.64025367206847,1.89696202455639,Descriptive only: survey-adjusted SEs not estimated
+PHYSHLTH_DAYS,0.0538709259454553,1.05534837526984,Descriptive only: survey-adjusted SEs not estimated
+GENHLTH_CLEAN,0.480871255873919,1.61748303005704,Descriptive only: survey-adjusted SEs not estimated
+AGE_BAND35-49,-0.374335683940674,0.687746007785682,Descriptive only: survey-adjusted SEs not estimated
+AGE_BAND50-64,-0.729327236487698,0.482233309958039,Descriptive only: survey-adjusted SEs not estimated
+AGE_BAND65+,-1.57042773075811,0.207956214062044,Descriptive only: survey-adjusted SEs not estimated
+SEX_CLEANMale,-0.418860230820836,0.657796128467886,Descriptive only: survey-adjusted SEs not estimated
+EDU_CLEANHS,0.177225168179409,1.19389989112851,Descriptive only: survey-adjusted SEs not estimated
+EDU_CLEANSome college,0.275769175478732,1.31754370752972,Descriptive only: survey-adjusted SEs not estimated
+EDU_CLEANCollege grad,-0.101537579258815,0.903447227827088,Descriptive only: survey-adjusted SEs not estimated
+INCOME_BAND25-49k,-0.204323784363847,0.815198379962618,Descriptive only: survey-adjusted SEs not estimated
+INCOME_BAND50-74k,-0.274373309537395,0.760048289018951,Descriptive only: survey-adjusted SEs not estimated
+INCOME_BAND75k+,-0.487976977949885,0.6138670053571,Descriptive only: survey-adjusted SEs not estimated
+cohortAI/AN alone:PERIODPost-2020,0.145835149682703,1.15700543961492,Descriptive only: survey-adjusted SEs not estimated
+cohortAI/AN alone:PHYSHLTH_DAYS,0.00436104828457738,1.00437057149434,Descriptive only: survey-adjusted SEs not estimated
+PERIODPost-2020:GENHLTH_CLEAN,-0.0864483625812365,0.917182908519858,Descriptive only: survey-adjusted SEs not estimated

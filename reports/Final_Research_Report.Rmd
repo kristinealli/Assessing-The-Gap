@@ -1,0 +1,317 @@
+---
+title: "Assessing the Gap"
+subtitle: "Frequent Mental Distress Trends and Predictive Model Performance Among American Indian/Alaska Native Adults, BRFSS 2014–2024"
+author: "AIM-AHEAD Research Project"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE,
+                      message = FALSE, fig.width = 9, fig.height = 5.3)
+library(data.table)
+library(ggplot2)
+root <- ".."
+table_dir <- file.path(root, "outputs", "tables")
+fig_dir <- file.path(root, "outputs", "figures")
+read_result <- function(name) {
+    file <- file.path(table_dir, name)
+    if (!file.exists(file)) stop("Missing output: ", file,
+                                 ". Run the R scripts first.")
+    data.table::fread(file)
+}
+show_table <- function(data, digits = 3, caption = NULL) {
+    knitr::kable(data, digits = digits, caption = caption,
+                 format.args = list(big.mark = ","))
+}
+```
+
+# Executive summary
+
+National health surveys provide important evidence about mental distress, but
+national prediction accuracy can mask differences in performance for smaller
+population groups. This study evaluates whether three classifiers trained on
+pooled national BRFSS data perform comparably for **AI/AN-alone adults** and
+**other identified single-race adults**, and whether performance differs before
+and after 2020.
+
+The analysis uses a previously assembled BRFSS 2014–2024 analytical file
+with 4,790,742 records and 25 selected variables. The main outcome is
+frequent mental distress (FMD): reporting 14 or more mentally unhealthy
+days in the previous 30 days. Associations and performance differences are
+descriptive; this study does not establish causal mechanisms or clinical harms.
+
+# 1. Research questions
+
+**Primary research question:** How well do models trained on pooled U.S.
+BRFSS data classify frequent mental distress among AI/AN-alone adults
+compared with other identified single-race adults, and does performance
+differ between 2014–2019 and 2020–2024?
+
+**Supporting questions:** How did the prevalence of FMD differ between
+periods across the two populations? How did physical-health, demographic,
+and socioeconomic characteristics relate to FMD, and did selected
+associations vary by group or period?
+
+# 2. Background
+
+BRFSS is an annual, repeated cross-sectional health survey of U.S. adults.
+FMD captures frequent self-reported poor mental health, not a clinical
+diagnosis. CDC analyses of earlier BRFSS surveys documented mental-distress
+differences across racial and ethnic populations and lower distress among
+respondents with greater socioeconomic resources (CDC, 2004). An analysis
+of the 2018 BRFSS showed substantial FMD differences by disability status
+(Cree et al., 2020). These findings motivate studying physical health and
+socioeconomic characteristics, not assuming they cause distress.
+
+Health surveillance research has emphasized that aggregate AI/AN samples
+may be small and cannot reflect every Tribal community (Adakai et al., 2018).
+Healthcare algorithm research has also illustrated how overall model behavior
+can mask group-level problems when proxies or evaluation targets are
+poorly aligned with health needs (Obermeyer et al., 2019). That healthcare
+algorithm studied a different outcome and population; it motivates careful
+subgroup evaluation rather than establishing an AI/AN bias in the BRFSS models.
+
+**Population definition:** The analysis classifies respondents reporting
+AI/AN alone separately from respondents classified in other identified
+single-race categories. Multiracial and unknown-race categories are excluded
+from this primary two-group comparison. The comparison group should not be
+interpreted as necessarily free of Indigenous ancestry. The available
+calculated race-alone indicator cannot identify all AI/AN respondents who
+also report another race.
+
+# 3. Data, outcome and methods
+
+The original pooled dataset was previously created from 11 annual BRFSS files.
+The reproducible RStudio pipeline starts from that archived file; it does
+not re-extract the XPT sources.
+
+The binary outcome uses MENTHLTH responses: 14–30 days = 1; 0–13
+days = 0. BRFSS code 88 ("none") is zero days, while codes 77 and 99
+("don't know"/refused) are missing.
+
+Predictors are physically unhealthy days, general health, income,
+education, age, recorded sex and the study period. They are measured
+contemporaneously, so classification here is not prospective clinical
+prediction.
+
+The project uses a common train/test split stratified by year, group and
+outcome, with three shared cross-validation folds, followed by a held-out
+evaluation in both periods. Model training and evaluation use
+sampling-adjusted weights to account for computational caps on the much
+larger comparison group.
+
+The primary prevalence estimates use the historical notebook's pooled
+weight formula. Alternative pooling approaches are reported as
+sensitivity checks. This is not an endorsement of a unique official CDC
+multi-year weighting formula. The reported model metrics are weighted
+descriptive estimates; no complex-survey confidence intervals are
+automatically claimed.
+
+# 4. Descriptive exploration
+
+## 4.1 Retention and availability
+
+```{r retention}
+show_table(read_result("02_group_retention.csv"), 0,
+           "Group-by-period sample retention.")
+```
+
+**How to read:** Compare `n`, `outcome_valid`, and `complete_predictors`
+within each group; complete-case exclusion may not affect every population
+equally.
+
+## 4.2 FMD prevalence
+
+```{r prevalence}
+show_table(read_result("02_prevalence_by_group_period.csv"), 2,
+           "FMD prevalence (%) by population and period under three weighting choices.")
+```
+
+**How to read:** Each percentage describes respondents reporting 14+
+mentally unhealthy days. Values are estimates from repeated cross-sectional
+surveys, not within-person changes.
+
+```{r annual-plot, out.width="100%"}
+knitr::include_graphics(file.path(fig_dir, "02_annual_fmd_trend.png"))
+```
+
+**How to read the graph:** Each point represents one year. The dashed
+vertical line indicates the start of 2020. Higher values indicate a larger
+estimated share of respondents reporting FMD. The lines do not establish
+causes for changes.
+
+# 5. Unsupervised learning: PCA
+
+PCA was fit using dummy-coded predictors in a training subsample, excluding
+FMD as an input. The first two components summarize axes of variation in
+the recorded predictor combinations.
+
+```{r pca-variance}
+show_table(head(read_result("04_pca_explained_variance.csv"), 5), 2,
+           "Variance captured by leading principal components.")
+```
+
+```{r pca-plot, out.width="100%"}
+knitr::include_graphics(file.path(fig_dir, "04_pca_scores.png"))
+```
+
+**How to read the graph:** Each point is one respondent. Points close
+together have similar encoded predictor values. Overlap is expected and
+does not itself mean that health outcomes are the same. The displayed PCA
+sample is a computational subsample, not a nationally representative map.
+
+```{r pca-loadings}
+loadings <- read_result("04_pca_loadings.csv")
+loadings[, magnitude := abs(PC1)]
+show_table(head(loadings[order(-magnitude),
+                         .(variable, PC1, PC2)], 8), 3,
+           "Predictor encodings with the largest absolute PC1 loadings.")
+```
+
+Large absolute loadings indicate which encoded predictors most strongly
+contribute to the first PCA dimension; the sign of a component is arbitrary.
+
+# 6. Supervised learning
+
+## 6.1 Three-model comparison and cross-validation
+
+The models were: ordinary logistic regression, LASSO-penalized logistic
+regression and random forest. All three were evaluated using the same
+cross-validation folds. Hyperparameters were chosen by mean CV AUROC.
+
+```{r cv-table}
+selected <- read_result("06_selected_configurations.csv")
+show_table(selected, 4,
+           "Cross-validation winners (higher AUROC is better).")
+winner <- selected[which.max(cv_mean_auroc)]
+cat(sprintf(
+    "The highest mean cross-validated AUROC in this run was achieved by **%s** (%.3f).",
+    winner$family, winner$cv_mean_auroc
+))
+```
+Cross-validation scores select models; independent held-out scores are
+the primary evidence for performance across population and period.
+
+## 6.2 Held-out performance by group and period
+
+```{r performance}
+m <- read_result("09_heldout_model_performance.csv")
+show_table(m[, .(family, study_period, cohort, n, events,
+                 auroc, average_precision, brier,
+                 sensitivity, specificity, calibration_gap)], 3,
+           "Held-out model metrics by group and period.")
+```
+
+**Metric guide:** AUROC and average precision summarize ranking quality
+(higher is generally better). Brier score measures probability accuracy
+(lower is better). Sensitivity is the fraction of actual FMD cases
+classified positive; specificity is the fraction of noncases classified
+negative. The reported classification threshold is 0.20.
+
+```{r auroc-plot, out.width="100%"}
+knitr::include_graphics(file.path(fig_dir, "09_auroc_comparison.png"))
+```
+
+**How to read:** Compare the group points within each period. The distance
+between the points is a descriptive difference in discrimination. It does
+not by itself establish algorithmic discrimination or the source of the
+difference.
+
+## 6.3 Does the group gap change across periods?
+
+```{r gap-change}
+show_table(read_result("09_change_in_auc_gap.csv"), 4,
+           "Change in AI/AN-minus-comparison AUROC gap (post minus pre).")
+```
+
+A negative result means the AUROC difference became more unfavorable to
+AI/AN-alone respondents in the later period. These are **observed
+differences**, not automatically statistically significant changes.
+
+```{r gap-interpretation, results="asis"}
+gap <- read_result("09_change_in_auc_gap.csv")
+if (all(gap$change_in_auc_gap < 0, na.rm = TRUE)) {
+    cat("All three fitted classifiers showed a more negative AI/AN-minus-comparison AUROC gap in the later period in this run.")
+} else {
+    cat("The magnitude and direction of changes varied across model families in this run.")
+}
+```
+
+## 6.4 Calibration
+
+```{r calibration, out.width="100%"}
+knitr::include_graphics(file.path(fig_dir, "09_calibration.png"))
+```
+
+**How to read:** The dashed diagonal is ideal agreement between predicted
+and observed FMD. Points above the line mean the model predicted a lower
+probability than the actual observed rate for that bin; points below the
+line mean predicted risk was too high.
+
+# 7. Associated factors and limitations
+
+```{r association, results="asis"}
+file <- file.path(table_dir, "05_adjusted_predicted_probabilities.csv")
+if (file.exists(file)) {
+    show_table(read_result(basename(file)), 2,
+               "Exploratory covariate-standardized FMD predictions (%).")
+} else {
+    cat("The exploratory association results were not run.")
+}
+```
+
+The regression-based associations are exploratory and contemporaneous.
+
+```{r feature-signals}
+signals <- read_result("09_predictor_signals.csv")
+signals[, magnitude := abs(value)]
+top_signals <- signals[order(family, -magnitude),
+                       head(.SD, 6), by = family,
+                       .SDcols = c("term", "value", "type")]
+show_table(top_signals, 3,
+           "Largest-magnitude signals within each model family.")
+```
+
+Positive logistic coefficients indicate higher fitted log odds relative
+to their reference values, conditional on the other model terms. LASSO
+coefficients are penalized; forest impurity importance has an entirely
+different scale and may favor variables with more possible splits.
+Coefficient magnitudes therefore should **not** be compared directly
+across model families.
+
+Key limitations include the use of AI/AN-alone race categories rather
+than all AI/AN combinations, changes in survey coverage and measurement
+over time, nominal income brackets across years, incomplete source-level
+certainty about all year-specific harmonizations, and lack of
+design-based uncertainty intervals for model-performance gaps. The
+historical source-file audit identified four differences between an
+independently calculated 2024 FMD category and the saved outcome; that
+issue should be resolved or disclosed before any claim of perfect
+source-category agreement.
+
+# 8. Conclusions
+
+The core evaluation tests whether models trained on pooled national data
+show comparable held-out discrimination and probability accuracy for
+AI/AN-alone respondents and the other identified single-race comparison
+population in two time periods. Findings should be summarized directly
+from the generated performance and gap tables, with the limitations
+above. Model-performance differences alone do not establish their
+causes or demonstrate real-world clinical harm.
+
+# References
+
+- CDC. *Frequent Mental Distress Among Adults with Disabilities, 2018.*
+  https://www.cdc.gov/mmwr/volumes/69/wr/mm6936a2.htm
+- CDC. *Frequent Mental Distress among Adults, United States, 1993–2001.*
+  https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5341a1.htm
+- Adakai M, et al. (2018). *Health Disparities Among American Indians/Alaska Natives, Arizona.*
+  https://www.cdc.gov/mmwr/volumes/67/wr/mm6747a4.htm
+- Obermeyer Z, et al. (2019). *Dissecting racial bias in an algorithm used to manage the health of populations.*
+  https://www.science.org/doi/10.1126/science.aax2342
+- CDC. BRFSS annual survey documentation and calculated variables.
+  https://www.cdc.gov/brfss/annual_data/annual_data.htm

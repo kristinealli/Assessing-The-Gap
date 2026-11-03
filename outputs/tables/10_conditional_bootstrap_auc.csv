@@ -1,0 +1,13 @@
+family,study_period,cohort,lower_95,upper_95,interval_type
+logistic,Pre-2020,AI/AN alone,0.720497479445751,0.789397627727785,conditional respondent bootstrap (not survey-design CI)
+logistic,Pre-2020,Other identified single-race,0.763537281578011,0.773555269463008,conditional respondent bootstrap (not survey-design CI)
+logistic,Post-2020,AI/AN alone,0.650973980774903,0.740927688609974,conditional respondent bootstrap (not survey-design CI)
+logistic,Post-2020,Other identified single-race,0.761646542034774,0.771918632600007,conditional respondent bootstrap (not survey-design CI)
+lasso,Pre-2020,AI/AN alone,0.720115796170475,0.789467325462317,conditional respondent bootstrap (not survey-design CI)
+lasso,Pre-2020,Other identified single-race,0.763692520518474,0.773685252083806,conditional respondent bootstrap (not survey-design CI)
+lasso,Post-2020,AI/AN alone,0.6511076045591,0.740477722584984,conditional respondent bootstrap (not survey-design CI)
+lasso,Post-2020,Other identified single-race,0.761678377325093,0.77192159658079,conditional respondent bootstrap (not survey-design CI)
+forest,Pre-2020,AI/AN alone,0.722736546755536,0.783112357250514,conditional respondent bootstrap (not survey-design CI)
+forest,Pre-2020,Other identified single-race,0.759614549072678,0.769683365852603,conditional respondent bootstrap (not survey-design CI)
+forest,Post-2020,AI/AN alone,0.643067613985287,0.738964994150836,conditional respondent bootstrap (not survey-design CI)
+forest,Post-2020,Other identified single-race,0.753334557748879,0.764046625896427,conditional respondent bootstrap (not survey-design CI)

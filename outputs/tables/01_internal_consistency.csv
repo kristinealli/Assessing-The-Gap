@@ -1,0 +1,4 @@
+check,discrepancies,notes
+FMD coding from MENTHLTH_RAW,0,"Independent raw-code rule (88=zero, 77/99=missing)"
+AI/AN-alone race recoding,0,"Checks mapped race-alone flag, not race combinations"
+Stored historical pooled-weight formula,0,Maximum absolute numeric discrepancy: 9.09495e-13
